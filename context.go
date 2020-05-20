@@ -26,3 +26,7 @@ func (c *Context) reset() {
 	c.Writer = &c.writermem
 	c.index = -1
 }
+
+func (c *Context) String(body string) {
+	c.writermem.WriteString(body)
+}

@@ -1,6 +1,7 @@
 package honey
 
 import (
+	"log"
 	"net/http"
 	"sync"
 )
@@ -32,6 +33,7 @@ type RouteInfos []RouteInfo
 
 // Engine 定义web项目引擎
 type Engine struct {
+	RouterGroup
 	trees   methodTrees
 	context *Context
 	pool    sync.Pool
@@ -39,7 +41,15 @@ type Engine struct {
 
 // New 返回Engine实例
 func New() *Engine {
-	engine := &Engine{}
+	engine := &Engine{
+		RouterGroup: RouterGroup{
+			Handlers: nil,
+			basePath: "/",
+			root:     true,
+		},
+		trees: make(methodTrees, 0, 9),
+	}
+	engine.RouterGroup.engine = engine
 	engine.pool.New = func() interface{} {
 		return engine.allocateContext()
 	}
@@ -69,6 +79,17 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 
 	root.addRoute(path, handlers)
 }
-func (engine *Engine) handleHTTPRequest(c *Context) {
 
+func (engine *Engine) handleHTTPRequest(c *Context) {
+	httpMethod := c.Request.Method
+	rPath := c.Request.URL.Path
+	c.String("hello" + httpMethod + rPath)
+
+	// t := engine.trees
+}
+
+// Run 启动服务
+func (engine *Engine) Run(addr string) {
+	log.Printf("honey server is started at : %s\n", addr)
+	log.Fatal(http.ListenAndServe(addr, engine))
 }

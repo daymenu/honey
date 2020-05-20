@@ -10,6 +10,7 @@ const address = ":8000"
 
 func TestMain(t *testing.T) {
 	route := New()
+	route.GET("/hello", Hello)
 	log.Printf("honey server is started at : %s\n", address)
 	log.Fatal(http.ListenAndServe(address, route))
 }

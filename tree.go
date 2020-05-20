@@ -2,8 +2,6 @@ package honey
 
 import (
 	"bytes"
-
-	"github.com/micro/go-micro/v2/util/log"
 )
 
 const (
@@ -150,7 +148,6 @@ func parseWildcard(wildcard string) (nType nodeType, paramName string, wildcardV
 
 	if wildcardByte[0] == regexWildcard {
 		i := bytes.LastIndex(wildcardByte, endRegexWildcard)
-		log.Info(i)
 		return regex, wildcard[i+1:], wildcard[1:i]
 	}
 	return
